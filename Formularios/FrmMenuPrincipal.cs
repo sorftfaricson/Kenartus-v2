@@ -284,6 +284,7 @@ namespace Kenartus.Formularios
                         catch (Exception ex)
             {
                 MessageBox.Show("¡Error! El Arduino no está conectado." + ex.Message);
+
             }
             
         }
