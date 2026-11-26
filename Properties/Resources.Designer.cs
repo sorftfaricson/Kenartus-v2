@@ -83,6 +83,16 @@ namespace Kenartus.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap amarillaFondo {
+            get {
+                object obj = ResourceManager.GetObject("amarillaFondo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap arriba {
             get {
                 object obj = ResourceManager.GetObject("arriba", resourceCulture);
@@ -115,6 +125,16 @@ namespace Kenartus.Properties {
         public static System.Drawing.Bitmap caminador1 {
             get {
                 object obj = ResourceManager.GetObject("caminador1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap CaminadoraMinimalista {
+            get {
+                object obj = ResourceManager.GetObject("CaminadoraMinimalista", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -162,6 +182,56 @@ namespace Kenartus.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap FondoAzul {
+            get {
+                object obj = ResourceManager.GetObject("FondoAzul", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap futuristaFondo {
+            get {
+                object obj = ResourceManager.GetObject("futuristaFondo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap image {
+            get {
+                object obj = ResourceManager.GetObject("image", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap ImagenColorAzulClaro {
+            get {
+                object obj = ResourceManager.GetObject("ImagenColorAzulClaro", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap interfazVerde {
+            get {
+                object obj = ResourceManager.GetObject("interfazVerde", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap IrS {
             get {
                 object obj = ResourceManager.GetObject("IrS", resourceCulture);
@@ -192,6 +262,26 @@ namespace Kenartus.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        public static System.Drawing.Bitmap naranjaFondo {
+            get {
+                object obj = ResourceManager.GetObject("naranjaFondo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap negroFondo {
+            get {
+                object obj = ResourceManager.GetObject("negroFondo", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         public static System.Drawing.Bitmap pierna1 {
             get {
                 object obj = ResourceManager.GetObject("pierna1", resourceCulture);
@@ -205,6 +295,16 @@ namespace Kenartus.Properties {
         public static System.Drawing.Bitmap piernaSentado1 {
             get {
                 object obj = ResourceManager.GetObject("piernaSentado1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        public static System.Drawing.Bitmap verdeFondo {
+            get {
+                object obj = ResourceManager.GetObject("verdeFondo", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

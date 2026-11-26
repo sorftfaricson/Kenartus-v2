@@ -37,11 +37,15 @@ namespace Kenartus.Formularios
         public FrmMenuPrincipal()
         {
             InitializeComponent();
+            ActualizarLista();
+            IniciarFondoConexion();
+            IniciarFondoControl();
+            IniciarFondoDatos();
         }
 
         private void FrmMenuPrincipal_Load(object sender, EventArgs e)
         {
-
+            
             brillo.Play();
             pictureBox2.Parent = pictureBox1;
             label1.Parent = pictureBox1;
@@ -51,6 +55,76 @@ namespace Kenartus.Formularios
             string[] puertosDisponibles = SerialPort.GetPortNames();
             CbxPuertos.Items.Clear();
             CbxPuertos.Items.AddRange(puertosDisponibles);
+        }
+        private void IniciarFondoConexion()
+        {
+            pictureBox3.Parent = pictureBox8;
+            pictureBox3.BackColor = Color.Transparent;
+            label2.Parent = pictureBox8;
+            label2.BackColor = Color.Transparent;
+
+            
+        }
+
+        private void IniciarFondoControl()
+        {
+            label3.Parent = PbxFondo;
+            label3.BackColor = Color.Transparent;
+            label4.Parent = PbxFondo;
+            label4.BackColor = Color.Transparent;
+            label5.Parent = PbxFondo;
+            label5.BackColor = Color.Transparent;
+            label10.Parent = PbxFondo;
+            label10.BackColor = Color.Transparent;
+            label11.Parent = PbxFondo;
+            label11.BackColor = Color.Transparent;
+            label12.Parent = PbxFondo;
+            label12.BackColor = Color.Transparent;
+            label13.Parent = PbxFondo;
+            label13.BackColor = Color.Transparent;
+            label14.Parent = PbxFondo;
+            label14.BackColor = Color.Transparent;
+            pictureBox4.Parent = PbxFondo;
+            pictureBox4.BackColor = Color.Transparent;
+
+            checkBox2.Parent = PbxFondo;
+            checkBox2.BackColor = Color.Transparent;
+            checkBox3.Parent = PbxFondo;
+            checkBox3.BackColor = Color.Transparent;
+            checkBox4.Parent = PbxFondo;
+            checkBox4.BackColor = Color.Transparent;
+
+            
+        }
+
+        private void IniciarFondoDatos() 
+        {
+            label6.Parent = PbxFondoDatos;
+            label6.BackColor = Color.Transparent;
+            label7.Parent = PbxFondoDatos;
+            label7.BackColor = Color.Transparent;
+            label8.Parent = PbxFondoDatos;
+            label8.BackColor = Color.Transparent;
+            label9.Parent = PbxFondoDatos;
+            label9.BackColor = Color.Transparent;
+            label17.Parent = PbxFondoDatos;
+            label17.BackColor = Color.Transparent;
+            label18.Parent = PbxFondoDatos;
+            label18.BackColor = Color.Transparent;
+            pictureBox5.Parent = PbxFondoDatos;
+            pictureBox5.BackColor = Color.Transparent;
+
+            pictureBox6.Parent = PbxFondoMultimedia;
+            pictureBox6.BackColor = Color.Transparent;
+
+            pictureBox7.Parent = PbxFondoAjustesavanzados;
+            pictureBox7.BackColor = Color.Transparent;
+
+            
+
+
+
+
         }
 
         private void tabPage1_Click(object sender, EventArgs e)
@@ -189,19 +263,29 @@ namespace Kenartus.Formularios
 
         private void EnviarDatoArduino(string datos)
         {
-            // Verificamos que el objeto exista y el puerto esté abierto
-            if (arduinoPort.IsOpen == true)
+            try 
             {
-                foreach (char c in datos)
+                // Verificamos que el objeto exista y el puerto esté abierto
+                if (arduinoPort.IsOpen == true)
                 {
-                    arduinoPort.Write(c.ToString());
-                    System.Threading.Thread.Sleep(2); // opcional
+                    foreach (char c in datos)
+                    {
+                        arduinoPort.Write(c.ToString());
+                        System.Threading.Thread.Sleep(2); // opcional
+                    }
                 }
+                else
+                {
+                    MessageBox.Show("¡Error! El Arduino no está conectado.");
+                }
+
+
             }
-            else
+                        catch (Exception ex)
             {
-                MessageBox.Show("¡Error! El Arduino no está conectado.");
+                MessageBox.Show("¡Error! El Arduino no está conectado." + ex.Message);
             }
+            
         }
 
 
@@ -309,6 +393,7 @@ namespace Kenartus.Formularios
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             mensaje = numericUpDown1.Value.ToString() + "v";
+            EnviarDatoArduino(mensaje);
 
         }
 
@@ -316,12 +401,14 @@ namespace Kenartus.Formularios
         {
 
             mensaje = numericUpDown2.Value.ToString() + "u";
+            EnviarDatoArduino(mensaje);
 
         }
 
         private void numericUpDown3_ValueChanged(object sender, EventArgs e)
         {
             mensaje = numericUpDown3.Value.ToString() + "t";
+            EnviarDatoArduino(mensaje);
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -352,44 +439,49 @@ namespace Kenartus.Formularios
         }
 
 
-
+        private string carpetaPacientes = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ArchivosKenartus/Pacientes");
         private void BtnGuardarInfo_Click(object sender, EventArgs e)
         {
             try
             {
-                // 1. Obtener datos de los controles
                 string nombrePaciente = TxtNombre.Text.Trim();
-                // Reemplazamos caracteres que Windows no permite en nombres de archivos (como / o :)
-                string fechaLimpia = dateTimePicker1.Value.ToString("dd-MM-yyyy");
+                string fechaLimpia = DateTime.Now.ToString("dd-MM-yyyy");
 
-                // 2. Validar que el nombre no esté vacío
+
                 if (string.IsNullOrEmpty(nombrePaciente))
                 {
                     MessageBox.Show("Por favor, ingresa el nombre del paciente.");
                     return;
                 }
+                foreach (char c in Path.GetInvalidFileNameChars())
+                {
+                    nombrePaciente = nombrePaciente.Replace(c, '_');
+                }
 
                 // 3. Construir el nombre del archivo: "Nombre_Fecha.txt"
-                string nombreArchivo = $"{nombrePaciente}_{fechaLimpia}.txt";
+                string nombreArchivo = nombrePaciente + "_" + fechaLimpia + ".txt";
 
                 // 4. Configurar rutas
-                string carpeta = Path.Combine(Application.StartupPath, "Archivos");
-                string rutaCompleta = Path.Combine(carpeta, nombreArchivo);
+                string rutaFinal = Path.Combine(carpetaPacientes, nombreArchivo);
 
                 // 5. Crear la carpeta si no existe
-                if (!Directory.Exists(carpeta)) Directory.CreateDirectory(carpeta);
+                if (!Directory.Exists(carpetaPacientes)) {Directory.CreateDirectory(carpetaPacientes);}
 
                 // 6. Formatear el contenido del archivo
-                string contenido = $"EXPEDIENTE MÉDICO{Environment.NewLine}";
-                contenido += $"Fecha: {fechaLimpia}{Environment.NewLine}";
-                contenido += $"Paciente: {nombrePaciente}{Environment.NewLine}";
-                contenido += $"Edad: {TxtEdad.Text}{Environment.NewLine}";
-                contenido += $"Padecimiento: {TxtPadecimiento.Text}{Environment.NewLine}";
+                string contenido = 
+                                  TxtNombre.Text + Environment.NewLine +
+                                  TxtEdad.Text + Environment.NewLine +
+                                  TxtPadecimiento.Text + Environment.NewLine +
+                                  ComboBoxRutina.Text + Environment.NewLine +
+                                  numericUpDown1.Value + Environment.NewLine +
+                                  numericUpDown2.Value + Environment.NewLine +
+                                  numericUpDown3.Value;
 
                 // 7. Guardar el archivo (WriteAllText crea uno nuevo o sobrescribe si ya existe ese mismo día)
-                File.WriteAllText(rutaCompleta, contenido);
+                File.WriteAllText(rutaFinal, contenido);
 
-                MessageBox.Show($"Archivo '{nombreArchivo}' guardado con éxito.");
+                MessageBox.Show($"Archivo '{nombreArchivo}' guardado con éxito en carpeta pacientes.");
+                ActualizarLista();
             }
             catch (Exception ex)
             {
@@ -398,6 +490,44 @@ namespace Kenartus.Formularios
 
 
 
+        }
+        private void ActualizarLista()
+        {
+            try
+            {
+                listaArchivos.Items.Clear(); // Limpia la lista actual
+
+                // Obtiene solo los nombres de archivos .txt en la carpeta
+                string[] archivos = Directory.GetFiles(carpetaPacientes, "*.txt");
+
+                foreach (string archivo in archivos)
+                {
+                    // Agrega solo el nombre del archivo (sin toda la ruta C:\...)
+                    listaArchivos.Items.Add(Path.GetFileName(archivo));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al listar archivos: " + ex.Message);
+            }
+
+            try
+            {
+                ListRutinas.Items.Clear(); // Limpia la lista actual
+
+                // Obtiene solo los nombres de archivos .txt en la carpeta
+                string[] archivos = Directory.GetFiles(carpetaRutinas, "*.txt");
+
+                foreach (string archivo in archivos)
+                {
+                    // Agrega solo el nombre del archivo (sin toda la ruta C:\...)
+                    ListRutinas.Items.Add(Path.GetFileName(archivo));
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al listar archivos: " + ex.Message);
+            }
         }
 
         private void BtnMostrar_Click(object sender, EventArgs e)
@@ -479,7 +609,7 @@ namespace Kenartus.Formularios
 
         private void checkBox1_CheckedChanged(object sender, EventArgs e)
         {
-            if (checkBox1.Checked)
+            /*if (checkBox1.Checked)
             {
                 // COLORES MODO OSCURO
                 this.tabPage1.BackColor = Color.Black;
@@ -500,7 +630,7 @@ namespace Kenartus.Formularios
                 this.tabPage6.BackColor = Color.White;
                 this.ForeColor = Color.Black;
 
-            }
+            }*/
         }
 
         private void CrearPlaylistWPL(string ruta, List<string> archivos)
@@ -728,6 +858,294 @@ namespace Kenartus.Formularios
                 Thread.Sleep(1);
                 EnviarDatoArduino("*");
             }
+        }
+
+        private void button4_Click(object sender, EventArgs e)
+        {
+            
+        }
+        private void button3_Click(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void btnActualizar_Click(object sender, EventArgs e)
+        {
+            ActualizarLista();
+            MessageBox.Show("Lista de archivos actualizada.");
+        }
+
+        private void listaArchivos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listaArchivos.SelectedItem == null) return;
+            try
+            {
+                string archivoSeleccionado = listaArchivos.SelectedItem.ToString();
+                string rutaCompleta = Path.Combine(carpetaPacientes, archivoSeleccionado);
+
+                if (File.Exists(rutaCompleta))
+                {
+                    string[] lineas = File.ReadAllLines(rutaCompleta);
+
+                    // Asigna los valores a tus TextBox tal como lo tenías
+                    if (lineas.Length >= 7)
+                    {
+                        TxtNombre.Text = lineas[0];
+                        TxtEdad.Text = lineas[1];
+                        TxtPadecimiento.Text = lineas[2];
+                        ComboBoxRutina.Text = lineas[3];
+                        numericUpDown1.Value = decimal.Parse(lineas[4]);
+                        Thread.Sleep(10);
+                        numericUpDown2.Value = decimal.Parse(lineas[5]);
+                        Thread.Sleep(10);
+                        numericUpDown3.Value = decimal.Parse(lineas[6]);
+                        Thread.Sleep(10);
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al leer el archivo seleccionado: " + ex.Message);
+            }
+        }
+
+        private void textBox2_TextChanged(object sender, EventArgs e)
+        {
+            string busqueda = textBox2.Text.ToLower().Trim();
+
+            try
+            {
+                listaArchivos.Items.Clear(); // Limpiamos la lista para filtrar
+
+                // Obtenemos todos los archivos de la carpeta
+                string[] archivos = Directory.GetFiles(carpetaPacientes, "*.txt");
+
+                foreach (string archivo in archivos)
+                {
+                    string nombreArchivo = Path.GetFileName(archivo);
+
+                    // Si el nombre contiene lo que el usuario está escribiendo, lo agrega
+                    if (nombreArchivo.ToLower().Contains(busqueda))
+                    {
+                        listaArchivos.Items.Add(nombreArchivo);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al filtrar sugerencias: " + ex.Message);
+            }
+        }
+
+        private void BtnYPlus_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void BtnW_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label19_Click(object sender, EventArgs e)
+        {
+
+        }
+        string pasos;
+        private void AgregarXmas_Click(object sender, EventArgs e)
+        {
+            pasos = Xmas.Text + "X";
+            TxtBoxContenidoRutina.AppendText(pasos + Environment.NewLine);
+        }
+
+        private void AgregarXmenos_Click(object sender, EventArgs e)
+        {
+            pasos = Xmenos.Text + "x";
+            TxtBoxContenidoRutina.AppendText(pasos + Environment.NewLine);
+        }
+
+        private void AgregarYmas_Click(object sender, EventArgs e)
+        {
+            pasos = Ymas.Text + "Y";
+            TxtBoxContenidoRutina.AppendText(pasos + Environment.NewLine);
+        }
+
+        private void AgregarYmenos_Click(object sender, EventArgs e)
+        {
+            pasos = Ymenos.Text + "y";
+            TxtBoxContenidoRutina.AppendText(pasos + Environment.NewLine);
+        }
+
+        private void AgregarZmas_Click(object sender, EventArgs e)
+        {
+            pasos = Zmas.Text + "Z";
+            TxtBoxContenidoRutina.AppendText(pasos + Environment.NewLine);
+        }
+
+        private void AgregarZmenos_Click(object sender, EventArgs e)
+        {
+            pasos = Zmenos.Text + "z";
+            TxtBoxContenidoRutina.AppendText(pasos + Environment.NewLine);
+        }
+
+
+        private string carpetaRutinas = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "ArchivosKenartus/Rutinas");
+        private void GuardarRutinasEnLista_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string nombreRutina = TxtBoxNomRutina.Text.Trim();
+                
+
+
+                if (string.IsNullOrEmpty(nombreRutina))
+                {
+                    MessageBox.Show("Por favor, ingresa el nombre de la Rutina.");
+                    return;
+                }
+                foreach (char c in Path.GetInvalidFileNameChars())
+                {
+                    nombreRutina = nombreRutina.Replace(c, '_');
+                }
+
+                // 3. Construir el nombre del archivo: "Nombre_Fecha.txt"
+                string nombreArchivo = nombreRutina + ".txt";
+                // 4. Configurar rutas
+                string rutaFinal = Path.Combine(carpetaRutinas, nombreArchivo);
+
+                // 5. Crear la carpeta si no existe
+                if (!Directory.Exists(carpetaRutinas)) { Directory.CreateDirectory(carpetaRutinas); }
+
+                // 6. Aqui es donde me estanque , no se como guardar el contenido del TxtBoxContenidoRutina
+                string contenido = TxtBoxContenidoRutina.Text;
+
+                // 7. Guardar el archivo (WriteAllText crea uno nuevo o sobrescribe si ya existe ese mismo día)
+                File.WriteAllText(rutaFinal, contenido);
+
+                MessageBox.Show($"Archivo '{nombreArchivo}' guardado con éxito en carpeta Rutinas.");
+                ActualizarLista();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error: " + ex.Message);
+            }
+        }
+
+        private void ListRutinas_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (ListRutinas.SelectedItem == null) return;
+            try
+            {
+                string archivoSeleccionado = ListRutinas.SelectedItem.ToString();
+                string rutaCompleta = Path.Combine(carpetaRutinas, archivoSeleccionado);
+                if (File.Exists(rutaCompleta))
+                {
+                    string[] lineas = File.ReadAllLines(rutaCompleta);
+
+                    
+
+                    // Une todas las líneas saltando de renglón y las muestra
+                    TxtBoxContenidoRutina.Text = string.Join(Environment.NewLine, lineas);
+
+
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al leer el archivo seleccionado: " + ex.Message);
+            }
+        }
+
+        private void BtnActRutinas_Click(object sender, EventArgs e)
+        {
+            ActualizarLista();
+        }
+
+        private void textBox3_TextChanged(object sender, EventArgs e)
+        {
+            string busqueda = textBox3.Text.ToLower().Trim();
+
+            try
+            {
+                ListRutinas.Items.Clear(); // Limpiamos la lista para filtrar
+
+                // Obtenemos todos los archivos de la carpeta
+                string[] archivos = Directory.GetFiles(carpetaRutinas, "*.txt");
+
+                foreach (string archivo in archivos)
+                {
+                    string nombreRutina = Path.GetFileName(archivo);
+
+                    // Si el nombre contiene lo que el usuario está escribiendo, lo agrega
+                    if (nombreRutina.ToLower().Contains(busqueda))
+                    {
+                        ListRutinas.Items.Add(nombreRutina);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al filtrar sugerencias: " + ex.Message);
+            }
+        }
+
+        private async void BtnEnviareRut_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // 2. Separar el contenido del TextBox línea por línea
+                string[] lineasDelText = TxtBoxContenidoRutina.Lines;
+
+                foreach (string linea in lineasDelText)
+                {
+                    // Ignorar líneas vacías por si acaso
+                    if (string.IsNullOrWhiteSpace(linea)) continue;
+
+                    // 3. Enviar la línea completa al Arduino + un salto de línea (\n)
+                    // Se usa WriteLine para que Arduino sepa exactamente dónde termina el comando
+                    arduinoPort.WriteLine(linea);
+
+                    // 4. EL RETARDO MÁGICO (No congela la pantalla)
+                    // Cambia el 1000 por los milisegundos que necesites (1000 ms = 1 segundo)
+                    await Task.Delay(100);
+                }
+
+                MessageBox.Show("¡Rutina enviada con éxito al Arduino!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Ocurrió un error durante el envío: " + ex.Message);
+            }
+        }
+
+        int ValorCaminadora = 0;
+        private void BtnCaminadora_Click(object sender, EventArgs e)
+        {
+            ValorCaminadora++;
+            if (ValorCaminadora == 1)
+            {
+                BtnCaminadora.BackColor = Color.Green;
+                numericUpDown4.Enabled = true;
+                numericUpDown4.Value = 10;
+                mensaje = numericUpDown4.Value.ToString() + "C";
+                EnviarDatoArduino(mensaje);
+            }
+            if (ValorCaminadora == 2)
+            {
+                BtnCaminadora.BackColor = Color.Transparent;
+                numericUpDown4.Enabled = false;
+                numericUpDown4.Value = 0;
+                mensaje = numericUpDown4.Value.ToString() + "C";
+                EnviarDatoArduino(mensaje);
+                ValorCaminadora = 0;
+            }
+        }
+
+        private void numericUpDown4_ValueChanged(object sender, EventArgs e)
+        {
+            mensaje = numericUpDown4.Value.ToString() + "C";
+            EnviarDatoArduino(mensaje);
         }
     }
 }
